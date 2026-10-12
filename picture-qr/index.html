@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Picture QR</title>
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header>
+  <nav class="crumbs"><a href="../">qrpic</a></nav>
+  <h1>Picture QR</h1>
+  <p>Hides an image inside a working QR code. Each module becomes a 3×3 block: the centre pixel carries the data, the other eight are a dither of your picture. Everything runs in this page — nothing is uploaded.</p>
+</header>
+
+<main>
+  <section class="panel" aria-label="Settings">
+    <fieldset>
+      <legend>Link</legend>
+      <textarea id="url" spellcheck="false" placeholder="https://example.com" aria-label="Text or URL to encode"></textarea>
+      <p class="note" id="charcount"></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Picture</legend>
+      <label class="drop" id="drop" for="file">
+        <img id="thumb" alt="">
+        <span><strong>Choose, drop, or paste an image</strong><small>PNG, JPG, SVG, WebP</small></span>
+      </label>
+      <input type="file" id="file" accept="image/*" hidden>
+      <div class="range"><label for="zoom">Zoom <output id="zoomV"></output></label><input type="range" id="zoom" min="0.5" max="3" step="0.01"></div>
+      <div class="range"><label for="panx">Pan left/right <output id="panxV"></output></label><input type="range" id="panx" min="-0.5" max="0.5" step="0.005"></div>
+      <div class="range"><label for="pany">Pan up/down <output id="panyV"></output></label><input type="range" id="pany" min="-0.5" max="0.5" step="0.005"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Tone</legend>
+      <div class="range"><label for="contrast">Contrast <output id="contrastV"></output></label><input type="range" id="contrast" min="0.5" max="3" step="0.05"></div>
+      <div class="range"><label for="bright">Brightness <output id="brightV"></output></label><input type="range" id="bright" min="0.5" max="2" step="0.01"></div>
+      <div class="check"><input type="checkbox" id="invert"><label for="invert" class="inline">Invert picture</label></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Code</legend>
+      <div class="row">
+        <div><label for="ecc">Error correction</label>
+          <select id="ecc"><option value="L">L · 7%</option><option value="M">M · 15%</option><option value="Q">Q · 25%</option><option value="H" selected>H · 30%</option></select></div>
+        <div><label for="minver">Min version</label>
+          <select id="minver"></select></div>
+      </div>
+      <div class="row">
+        <div><label for="dark">Dark</label><input type="color" id="dark"></div>
+        <div><label for="light">Light</label><input type="color" id="light"></div>
+      </div>
+      <details class="help"><summary>What do these do?</summary>
+        <p>Higher versions add more modules, so the picture gets more detail but the code gets denser to scan. Error correction H also forces a larger version, which helps the picture. Keep the dark colour much darker than the light one.</p>
+      </details>
+    </fieldset>
+  </section>
+
+  <section class="stage" aria-label="Result">
+    <div class="canvas-wrap"><canvas id="preview" width="10" height="10"></canvas></div>
+    <div class="status" id="status"></div>
+    <div class="actions">
+      <label for="scale" class="inline">Export size</label>
+      <select id="scale"><option value="4">×4</option><option value="6">×6</option><option value="10" selected>×10</option><option value="16">×16</option></select>
+      <button class="primary" id="download">Download PNG</button>
+      <button id="downloadSvg">Download SVG</button>
+    </div>
+    <p class="note">Scale the PNG only with nearest-neighbour (no smoothing). SVG stays sharp at any size and is best for print. Always test-scan with a phone before printing.</p>
+  </section>
+</main>
+
+<script src="../vendor/qrcode-generator/qrcode.js"></script>
+<script src="../vendor/jsqr/jsQR.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
